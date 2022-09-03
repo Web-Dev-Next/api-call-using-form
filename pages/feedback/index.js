@@ -1,13 +1,32 @@
+import { Fragment, useState } from "react";
 import { getDataOf, getFilePath } from "../helper/util";
+
 function Feedback(props) {
+  const [feedbackData, showFeedbackData] = useState();
+
+  function onClickShowMore(id) {
+    fetch(`/api/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        showFeedbackData(data.feedback);
+      });
+  }
+
   return (
-    <div>
+    <Fragment>
+      {feedbackData && <p>{feedbackData.email}</p>}
       <ul>
         {props.feedbacks.map((f) => (
-          <li key={f.id}>{f.message}</li>
+          <div>
+            <li key={f.id}>{f.message}</li>
+            <br />
+            <button onClick={onClickShowMore.bind(null, f.id)}>
+              Show more
+            </button>
+          </div>
         ))}
       </ul>
-    </div>
+    </Fragment>
   );
 }
 
